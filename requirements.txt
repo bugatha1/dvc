@@ -1,5 +1,10 @@
+#local package
+-e .
+
+# global packages
 dvc
 dvc[gdrive]
 sklearn
+pandas
 pytest
 tox
