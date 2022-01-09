@@ -7,7 +7,7 @@ from prediction_service.prediction import form_response, api_response
 import prediction_service
 
 input_data = {
-    "incorrect_data":{
+    "incorrect_range":{
         "fixed_acidity": 78,
         "volatile_acidity": 78,
         "citric_acid" : 55,
@@ -34,7 +34,7 @@ input_data = {
         "alcohol" : 4
     },
     "incorrect_col":{
-        "fixed_acidity1": 6,
+        "fixed_acidity": 6,
         "volatile_acidity": 5,
         "citric_acid" : 5,
         "residual_sugar" : 1,
@@ -60,3 +60,7 @@ def form_response_correct_range(data=input_data["correct_range"]):
 def api_response_correct_range(data=input_data["correct_range"]):
     res = api_response(data)
     assert TARGET_range["min"] <= res["response"] <= TARGET_range["max"]
+
+# def test_form_response_incorrect_range(data=input_data["incorrect_range"]):
+#     with pytest.raises(prediction_service.prediction.NotInRange):
+#         res = form_response(data)
