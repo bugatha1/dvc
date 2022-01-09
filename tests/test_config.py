@@ -53,13 +53,13 @@ TARGET_range = {
     "max" : 8.0
 }
 
-def form_response_correct_range(data=input_data["correct_range"]):
-    res = form_response(data)
-    assert TARGET_range["min"] <= res <= TARGET_range["max"]
+# def form_response_correct_range(data=input_data["correct_range"]):
+#     res = form_response(data)
+#     assert TARGET_range["min"] <= res <= TARGET_range["max"]
 
-def api_response_correct_range(data=input_data["correct_range"]):
-    res = api_response(data)
-    assert TARGET_range["min"] <= res["response"] <= TARGET_range["max"]
+# def api_response_correct_range(data=input_data["correct_range"]):
+#     res = api_response(data)
+#     assert TARGET_range["min"] <= res["response"] <= TARGET_range["max"]
 
 # def test_form_response_incorrect_range(data=input_data["incorrect_range"]):
 #     with pytest.raises(prediction_service.prediction.NotInRange):
