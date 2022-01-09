@@ -4,18 +4,21 @@ import json
 import joblib
 import numpy as np
 
+
 params_path = "params.yaml"
 schema_path = os.path.join("prediction_service", "schema_in.json")
 
-class NotInRagne(Exception):
-    def __init__(self, message="Entered values are not in range"):
+class NotInRange(Exception):
+    def __init__(self, message="Values entered are not in expected range"):
         self.message = message
         super().__init__(self.message)
 
 class NotInCols(Exception):
-    def __init__(self, message="Entered values are not in columns"):
+    def __init__(self, message="Not in cols"):
         self.message = message
         super().__init__(self.message)
+
+
 
 def read_params(config_path=params_path):
     with open(config_path) as yaml_file:
@@ -27,14 +30,14 @@ def predict(data):
     model_dir_path = config["webapp_model_dir"]
     model = joblib.load(model_dir_path)
     prediction = model.predict(data).tolist()[0]
-
     try:
-        if 3<= prediction <=8:
+        if 3 <= prediction <= 8:
             return prediction
         else:
-            raise NotInRagne
-    except NotInRagne:
-        return "Unexpected results"
+            raise NotInRange
+    except NotInRange:
+        return "Unexpected result"
+
 
 def get_schema(schema_path=schema_path):
     with open(schema_path) as json_file:
@@ -50,14 +53,16 @@ def validate_input(dict_request):
 
     def _validate_values(col, val):
         schema = get_schema()
-        if not (schema[col]["min"] <= float(dict_request[col]) <= schema[col]["max"]):
-            raise NotInRagne
+
+        if not (schema[col]["min"] <= float(dict_request[col]) <= schema[col]["max"]) :
+            raise NotInRange
 
     for col, val in dict_request.items():
         _validate_cols(col)
         _validate_values(col, val)
+    
+    return True
 
-        return True 
 
 def form_response(dict_request):
     if validate_input(dict_request):
@@ -73,8 +78,16 @@ def api_response(dict_request):
             response = predict(data)
             response = {"response": response}
             return response
-    except Exception as e:
-        response = {"the expected range :": get_schema(), "response": str(e)}
+            
+    except NotInRange as e:
+        response = {"the_exected_range": get_schema(), "response": str(e) }
         return response
 
-        
+    except NotInCols as e:
+        response = {"the_exected_cols": get_schema().keys(), "response": str(e) }
+        return response
+
+
+    except Exception as e:
+        response = {"response": str(e) }
+        return response
