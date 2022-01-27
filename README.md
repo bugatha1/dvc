@@ -2,6 +2,8 @@ create env
 
 ```bash
 conda create -n wineq python=3.8 -y
+
+source activate base
 ```
 
 activate env
